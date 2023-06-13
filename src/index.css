@@ -5,3 +5,7 @@
 .bg-default {
     background-color: #796049;
 }
+
+.map-container {
+    height: 420px;
+}
