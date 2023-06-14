@@ -4,10 +4,10 @@ import logo from '../../assets/logoG.png';
 
 function Navbar() {
     return (
-        <nav className='navbar mb-12 shadow-lg bg-default text-white'>
+        <nav className='navbar shadow-lg bg-default text-white'>
             <div className="container max-auto">
                 <div className="flex-none px-2 mx-2">
-                    <Link to='/' className='text-lg align-middle font-bold' >
+                    <Link to='/' className='text-lg align-middle' >
                         <img
                                 className="w-48 ml-2"
                                 src={logo}

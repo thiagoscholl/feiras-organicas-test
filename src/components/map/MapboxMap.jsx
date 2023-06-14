@@ -3,9 +3,9 @@ import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-load
 
 mapboxgl.accessToken = 'pk.eyJ1IjoidGhpYWdvc2Nob2xsIiwiYSI6ImNsaXN4OGE3djA0OWEzcm1zcHdkdm5yM2wifQ.4aDd0R5MJjQgvin406In0A';
 
-function Mapa() {
+function MapboxMap() {
 
-    const mapContainer = useRef(null);
+    const mapContainerRef = useRef(null);
     const map = useRef(null);
     const [lng, setLng] = useState(-52.31701511798634);
     const [lat, setLat] = useState(-31.7431904761913);
@@ -13,22 +13,23 @@ function Mapa() {
 
     useEffect(() => {
         if (map.current) return; // initialize map only once
-            map.current = new mapboxgl.Map({
-            container: mapContainer.current,
+        
+        map.current = new mapboxgl.Map({
+            container: mapContainerRef.current,
             style: 'mapbox://styles/thiagoscholl/cliuqmr8u00is01qib46p1nmn',
             center: [lng, lat],
-            zoom: zoom
+            zoom: zoom,
+            attributionControl: false,
             
         });
+
     });  
 
 
 
     return (
-        <div>
-            <div ref={mapContainer} className="map-container" />
-        </div>
+        <div ref={mapContainerRef} className="h-screen" />
     );
 }
 
-export default Mapa;
+export default MapboxMap;
