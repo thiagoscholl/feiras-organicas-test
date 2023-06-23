@@ -1,0 +1,10 @@
+{
+  "printWidth": 80,
+  "jsxSingleQuote": true,
+  "singleQuote": false,
+  "tabWidth": 2,
+  "bracketSpacing": true,
+  "endOfLine": "crlf",
+  "embeddedLanguageFormatting": "auto",
+  "semi": true
+}
