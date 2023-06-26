@@ -80,12 +80,11 @@ const geojson = {
   ],
 };
 
-//tipos: Serviço, Loja, Feira, Restaurante, Produdor
-
 function MapboxMap() {
   const [lng, setLng] = useState(-52.31701511798634);
   const [lat, setLat] = useState(-31.7431904761913);
   const [zoom, setZoom] = useState(14.5);
+  //const [markersVisible, setMarkersVisible] = useState(true);
 
   const markerSmall = {
     feira: MarkerFeiraSmall,
@@ -123,17 +122,28 @@ function MapboxMap() {
       el.style.height = `${height}px`;
       el.style.backgroundSize = "100%";
 
-      //el.addEventListener('click', () => {
-      //window.alert(marker.properties.message);
-      //});
+      const title = document.createElement("div");
+      title.className = "marker-title";
+      title.textContent = marker.properties.title;
+
+      /*
+      el.addEventListener('click', () => {
+
+        IR PARA PAGINA DO PRODUTOR QUANDO IMPLEMENTADO!!!!
+
+      });
+      */
 
       // Se o cursor passar por cima do marcador, aumentar o tamanho do marcador
       el.addEventListener("mouseover", () => {
         el.style.backgroundImage = `url(${markerBig[marker.properties.type]})`;
-        el.style.width = `57.8px`;
-        el.style.height = `90px`;
+        el.style.width = `${width * 1.93}px`;
+        el.style.height = `${height * 1.88}px`;
         el.style.backgroundSize = "100%";
         el.style.cursor = "pointer";
+
+        // Cria o elemento do título do marcador
+        el.appendChild(title);
       });
 
       // Se o cursor sair de cima do marcador, voltar ao tamanho original do marcador
@@ -144,10 +154,41 @@ function MapboxMap() {
         el.style.width = `${width}px`;
         el.style.height = `${height}px`;
         el.style.backgroundSize = "100%";
+
+        // Remove o elemento do título do marcador
+
+        /*
+          FALTA IMPLEMENTAR, DO JEITO ABAIXO ESTÁ DANDO PROBLEMA
+        */
+
+        //el.removeChild(title);
       });
 
       // Add markers to the map.
-      new mapboxgl.Marker(el).setLngLat(marker.geometry.coordinates).addTo(map);
+      //new mapboxgl.Marker(el).setLngLat(marker.geometry.coordinates).addTo(map);
+      const markerInstance = new mapboxgl.Marker(el)
+        .setLngLat(marker.geometry.coordinates)
+        .addTo(map);
+
+      // Update marker size on zoom change
+      map.on("zoom", () => {
+        const currentZoom = map.getZoom();
+        const scaleFactor = Math.pow(1.15, currentZoom - zoom);
+        const scaledWidth = width * scaleFactor;
+        const scaledHeight = height * scaleFactor;
+
+        el.style.width = `${scaledWidth}px`;
+        el.style.height = `${scaledHeight}px`;
+
+        if (currentZoom < 4.5) {
+          map.setZoom(4.5);
+        }
+      });
+
+      // Clean up marker instance
+      markerInstance.getElement().addEventListener("DOMNodeRemoved", () => {
+        markerInstance.remove();
+      });
     });
 
     return () => {
@@ -155,7 +196,7 @@ function MapboxMap() {
     };
   });
 
-  return <div id='map' className='h-screen' />;
+  return <div id='map' className='flex-1 h-full' />;
 }
 
 export default MapboxMap;

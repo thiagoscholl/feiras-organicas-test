@@ -3,5 +3,31 @@
 @tailwind utilities;
 
 .bg-default {
-    background-color: #796049;
+  background-color: #796049;
 }
+
+.marker-title {
+  position: absolute;
+  top: -25px; /* Ajuste a posição vertical conforme necessário */
+  left: -50%; /* Ajuste a posição horizontal conforme necessário */
+  width: 100px; /* Ajuste a largura do retângulo conforme necessário */
+  height: 38px;
+  background-color: white;
+
+  font-size: 13px;
+  font-weight: bold;
+  color: black;
+
+  text-align: center;
+  font-family: Inter;
+  font-weight: 500;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 2px;
+  border: 1px solid #796049;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
