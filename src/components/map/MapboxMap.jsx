@@ -84,7 +84,7 @@ function MapboxMap() {
   const [lng, setLng] = useState(-52.31701511798634);
   const [lat, setLat] = useState(-31.7431904761913);
   const [zoom, setZoom] = useState(14.5);
-  //const [markersVisible, setMarkersVisible] = useState(true);
+  const [markerTitleVisible, setMarkerTitleVisible] = useState();
 
   const markerSmall = {
     feira: MarkerFeiraSmall,
@@ -122,6 +122,7 @@ function MapboxMap() {
       el.style.height = `${height}px`;
       el.style.backgroundSize = "100%";
 
+      // Cria o elemento do título do marcador
       const title = document.createElement("div");
       title.className = "marker-title";
       title.textContent = marker.properties.title;
@@ -137,13 +138,14 @@ function MapboxMap() {
       // Se o cursor passar por cima do marcador, aumentar o tamanho do marcador
       el.addEventListener("mouseover", () => {
         el.style.backgroundImage = `url(${markerBig[marker.properties.type]})`;
-        el.style.width = `${width * 1.93}px`;
-        el.style.height = `${height * 1.88}px`;
+        el.style.width = `${width + 35}px`;
+        el.style.height = `${height + 53.5}px`;
         el.style.backgroundSize = "100%";
         el.style.cursor = "pointer";
 
-        // Cria o elemento do título do marcador
+        // Faz append para o título do marcador aparecer
         el.appendChild(title);
+        setMarkerTitleVisible(true);
       });
 
       // Se o cursor sair de cima do marcador, voltar ao tamanho original do marcador
@@ -156,16 +158,21 @@ function MapboxMap() {
         el.style.backgroundSize = "100%";
 
         // Remove o elemento do título do marcador
-
-        /*
-          FALTA IMPLEMENTAR, DO JEITO ABAIXO ESTÁ DANDO PROBLEMA
-        */
-
         //el.removeChild(title);
+        // Funcionando com problemas
+        // erro quando coloca o mouse em cima do titulo
+        // erro quando da zoom e tira o mouse do marker
+        setMarkerTitleVisible(false);
       });
 
+      //  Seta a classe do marcador para mostrar ou remover o título
+      if (markerTitleVisible) {
+        el.classList.add("marker-title-visible");
+      } else {
+        el.classList.add("marker-title-visible");
+      }
+
       // Add markers to the map.
-      //new mapboxgl.Marker(el).setLngLat(marker.geometry.coordinates).addTo(map);
       const markerInstance = new mapboxgl.Marker(el)
         .setLngLat(marker.geometry.coordinates)
         .addTo(map);
