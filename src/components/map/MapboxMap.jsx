@@ -84,9 +84,8 @@ function MapboxMap() {
   const [lng, setLng] = useState(-52.31701511798634);
   const [lat, setLat] = useState(-31.7431904761913);
   const [zoom, setZoom] = useState(14.5);
-  const [markerTitleVisible, setMarkerTitleVisible] = useState();
 
-  const markerSmall = {
+  const urlMarkerSmall = {
     feira: MarkerFeiraSmall,
     produtor: MarkerProdutorSmall,
     loja: MarkerLojaSmall,
@@ -94,7 +93,7 @@ function MapboxMap() {
     servico: MarkerServicoSmall,
   };
 
-  const markerBig = {
+  const urlMarkerBig = {
     feira: MarkerFeiraBig,
     produtor: MarkerProdutorBig,
     loja: MarkerLojaBig,
@@ -112,20 +111,17 @@ function MapboxMap() {
     });
 
     geojson.features.forEach((marker) => {
-      // Create a DOM element for each marker.
+      // Cria os marcadores
       const el = document.createElement("div");
       const width = 30;
       const height = 48;
       el.className = "marker";
-      el.style.backgroundImage = `url(${markerSmall[marker.properties.type]})`;
+      el.style.backgroundImage = `url(${
+        urlMarkerSmall[marker.properties.type]
+      })`;
       el.style.width = `${width}px`;
       el.style.height = `${height}px`;
       el.style.backgroundSize = "100%";
-
-      // Cria o elemento do título do marcador
-      const title = document.createElement("div");
-      title.className = "marker-title";
-      title.textContent = marker.properties.title;
 
       /*
       el.addEventListener('click', () => {
@@ -137,47 +133,46 @@ function MapboxMap() {
 
       // Se o cursor passar por cima do marcador, aumentar o tamanho do marcador
       el.addEventListener("mouseover", () => {
-        el.style.backgroundImage = `url(${markerBig[marker.properties.type]})`;
+        el.style.backgroundImage = `url(${
+          urlMarkerBig[marker.properties.type]
+        })`;
         el.style.width = `${width + 35}px`;
         el.style.height = `${height + 53.5}px`;
         el.style.backgroundSize = "100%";
         el.style.cursor = "pointer";
-
-        // Faz append para o título do marcador aparecer
-        el.appendChild(title);
-        setMarkerTitleVisible(true);
       });
 
       // Se o cursor sair de cima do marcador, voltar ao tamanho original do marcador
       el.addEventListener("mouseout", () => {
         el.style.backgroundImage = `url(${
-          markerSmall[marker.properties.type]
+          urlMarkerSmall[marker.properties.type]
         })`;
         el.style.width = `${width}px`;
         el.style.height = `${height}px`;
         el.style.backgroundSize = "100%";
-
-        // Remove o elemento do título do marcador
-        //el.removeChild(title);
-        // Funcionando com problemas
-        // erro quando coloca o mouse em cima do titulo
-        // erro quando da zoom e tira o mouse do marker
-        setMarkerTitleVisible(false);
       });
 
-      //  Seta a classe do marcador para mostrar ou remover o título
-      if (markerTitleVisible) {
-        el.classList.add("marker-title-visible");
-      } else {
-        el.classList.add("marker-title-visible");
-      }
-
-      // Add markers to the map.
+      // Adiciona os marcadores no mapa
       const markerInstance = new mapboxgl.Marker(el)
         .setLngLat(marker.geometry.coordinates)
         .addTo(map);
 
-      // Update marker size on zoom change
+      // Cria os popups com os titulos
+      const popup = new mapboxgl.Popup({
+        closeButton: false,
+        className: `marker-title`,
+        offset: [0, -40],
+      }).setHTML(`<h1>${marker.properties.title}</h1>`);
+
+      markerInstance.getElement().addEventListener("mouseenter", () => {
+        markerInstance.setPopup(popup).togglePopup();
+      });
+
+      markerInstance.getElement().addEventListener("mouseout", () => {
+        markerInstance.togglePopup();
+      });
+
+      // Altera o tamanho do marcador de acordo com o zoom
       map.on("zoom", () => {
         const currentZoom = map.getZoom();
         const scaleFactor = Math.pow(1.15, currentZoom - zoom);
