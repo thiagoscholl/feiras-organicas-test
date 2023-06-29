@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import "mapbox-gl/dist/mapbox-gl.css";
 import MarkerFeiraSmall from "../../assets/MarkerFeiraSmall.png";
@@ -84,6 +84,10 @@ function MapboxMap() {
   const [lng, setLng] = useState(-52.31701511798634);
   const [lat, setLat] = useState(-31.7431904761913);
   const [zoom, setZoom] = useState(14.5);
+  //const [isClicked, setIsClicked] = useState(false);
+  const isClicked = useRef(false);
+  //const [selectedMarker, setSelectedMarker] = useState(null);
+  const selectedMarker = useRef(null);
 
   const urlMarkerSmall = {
     feira: MarkerFeiraSmall,
@@ -123,35 +127,6 @@ function MapboxMap() {
       el.style.height = `${height}px`;
       el.style.backgroundSize = "100%";
 
-      /*
-      el.addEventListener('click', () => {
-
-        IR PARA PAGINA DO PRODUTOR QUANDO IMPLEMENTADO!!!!
-
-      });
-      */
-
-      // Se o cursor passar por cima do marcador, aumentar o tamanho do marcador
-      el.addEventListener("mouseover", () => {
-        el.style.backgroundImage = `url(${
-          urlMarkerBig[marker.properties.type]
-        })`;
-        el.style.width = `${width + 35}px`;
-        el.style.height = `${height + 53.5}px`;
-        el.style.backgroundSize = "100%";
-        el.style.cursor = "pointer";
-      });
-
-      // Se o cursor sair de cima do marcador, voltar ao tamanho original do marcador
-      el.addEventListener("mouseout", () => {
-        el.style.backgroundImage = `url(${
-          urlMarkerSmall[marker.properties.type]
-        })`;
-        el.style.width = `${width}px`;
-        el.style.height = `${height}px`;
-        el.style.backgroundSize = "100%";
-      });
-
       // Adiciona os marcadores no mapa
       const markerInstance = new mapboxgl.Marker(el)
         .setLngLat(marker.geometry.coordinates)
@@ -164,12 +139,87 @@ function MapboxMap() {
         offset: [0, -40],
       }).setHTML(`<h1>${marker.properties.title}</h1>`);
 
-      markerInstance.getElement().addEventListener("mouseenter", () => {
-        markerInstance.setPopup(popup).togglePopup();
+      // Quando clicar no marcador, abrir o popup e alterar o Marker
+      markerInstance.getElement().addEventListener("click", () => {
+        if (isClicked.current) {
+          markerInstance.setPopup(popup).togglePopup();
+        }
+
+        // Se clicar no marcador e ele estiver selecionado, deselecionar
+        if (selectedMarker.current === marker) {
+          selectedMarker.current = null;
+          isClicked.current = false;
+
+          console.log("marker deselecionado");
+
+          el.style.backgroundImage = `url(${
+            urlMarkerSmall[marker.properties.type]
+          })`;
+          el.style.width = `${width}px`;
+          el.style.height = `${height}px`;
+          el.style.backgroundSize = "100%";
+
+          return;
+        } else {
+          selectedMarker.current = marker;
+          isClicked.current = true;
+          console.log("marker clicado");
+
+          el.style.backgroundImage = `url(${
+            urlMarkerBig[marker.properties.type]
+          })`;
+          el.style.width = `${width + 35}px`;
+          el.style.height = `${height + 53.5}px`;
+          el.style.backgroundSize = "100%";
+        }
       });
 
+      // Quando o cursor passar por cima do marcador, abrir o popup e aumentar marker
+      markerInstance.getElement().addEventListener("mouseenter", () => {
+        if (!isClicked.current) {
+          markerInstance.setPopup(popup).togglePopup();
+
+          el.style.backgroundImage = `url(${
+            urlMarkerBig[marker.properties.type]
+          })`;
+          el.style.width = `${width + 35}px`;
+          el.style.height = `${height + 53.5}px`;
+          el.style.backgroundSize = "100%";
+          el.style.cursor = "pointer";
+        }
+      });
+
+      // Quando o cursor sair de cima do marcador, fechar o popup e diminuir marker
       markerInstance.getElement().addEventListener("mouseout", () => {
-        markerInstance.togglePopup();
+        if (!isClicked.current) {
+          markerInstance.togglePopup();
+
+          el.style.backgroundImage = `url(${
+            urlMarkerSmall[marker.properties.type]
+          })`;
+          el.style.width = `${width}px`;
+          el.style.height = `${height}px`;
+          el.style.backgroundSize = "100%";
+        }
+      });
+
+      // Quando marker estiver selecionado, ao clicar no mapa, deselecionar marker
+      map.on("click", () => {
+        //if (markerInstance.getPopup() !== null) {
+        //  console.log("tem popup", markerInstance.getPopup());
+        //}
+
+        //  deu tilt n sei de mais nada
+        if (!isClicked.current) {
+          console.log("mapa clicado");
+          selectedMarker.current = null;
+          el.style.backgroundImage = `url(${
+            urlMarkerSmall[marker.properties.type]
+          })`;
+          el.style.width = `${width}px`;
+          el.style.height = `${height}px`;
+          el.style.backgroundSize = "100%";
+        }
       });
 
       // Altera o tamanho do marcador de acordo com o zoom
