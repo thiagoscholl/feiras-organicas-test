@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import "mapbox-gl/dist/mapbox-gl.css";
 import MarkerFeiraSmall from "../../assets/MarkerFeiraSmall.png";
@@ -81,13 +81,12 @@ const geojson = {
 };
 
 function MapboxMap() {
-  const [lng, setLng] = useState(-52.31701511798634);
-  const [lat, setLat] = useState(-31.7431904761913);
-  const [zoom, setZoom] = useState(14.5);
-  //const [isClicked, setIsClicked] = useState(false);
   const isClicked = useRef(false);
-  //const [selectedMarker, setSelectedMarker] = useState(null);
   const selectedMarker = useRef(null);
+
+  let lng = -52.31701511798634;
+  let lat = -31.7431904761913;
+  let zoom = 14.5;
 
   const urlMarkerSmall = {
     feira: MarkerFeiraSmall,
@@ -115,6 +114,7 @@ function MapboxMap() {
     });
 
     geojson.features.forEach((marker) => {
+      let popupCounter = 0; // Contador para quando o marker é clicado e o popup é aberto
       // Cria os marcadores
       const el = document.createElement("div");
       const width = 30;
@@ -139,61 +139,68 @@ function MapboxMap() {
         offset: [0, -40],
       }).setHTML(`<h1>${marker.properties.title}</h1>`);
 
-      // Quando clicar no marcador, abrir o popup e alterar o Marker
       markerInstance.getElement().addEventListener("click", () => {
-        if (isClicked.current) {
-          markerInstance.setPopup(popup).togglePopup();
-        }
-
-        // Se clicar no marcador e ele estiver selecionado, deselecionar
+        // Quando clicar no marcador se ele estiver selecionado, deselecionar
         if (selectedMarker.current === marker) {
           selectedMarker.current = null;
           isClicked.current = false;
-
-          console.log("marker deselecionado");
-
-          el.style.backgroundImage = `url(${
-            urlMarkerSmall[marker.properties.type]
-          })`;
-          el.style.width = `${width}px`;
-          el.style.height = `${height}px`;
-          el.style.backgroundSize = "100%";
-
-          return;
+          popupCounter = 0;
+          //console.log("marker deselecionado");
         } else {
+          // Se clicar no marcador e ele não estiver selecionado, selecionar
+          markerInstance.setPopup(popup).togglePopup();
           selectedMarker.current = marker;
           isClicked.current = true;
-          console.log("marker clicado");
+          //console.log("marker clicado");
+        }
 
-          el.style.backgroundImage = `url(${
-            urlMarkerBig[marker.properties.type]
-          })`;
-          el.style.width = `${width + 35}px`;
-          el.style.height = `${height + 53.5}px`;
-          el.style.backgroundSize = "100%";
+        // Se clicar em ALGUM marcador e já estiver algum outro selecionado deseleciona o marker já selecionado
+        if (
+          isClicked.current &&
+          selectedMarker.current !== null &&
+          popupCounter === 1
+        ) {
+          selectedMarker.current = null;
+          isClicked.current = false;
+          popupCounter = 0;
+          //console.log("marker deselecionado mouse em cima de outro");
         }
       });
 
-      // Quando o cursor passar por cima do marcador, abrir o popup e aumentar marker
-      markerInstance.getElement().addEventListener("mouseenter", () => {
+      // Quando o cursor passar por cima do marcador e ele não estiver selecionado, abrir o popup
+      markerInstance.getElement().addEventListener("mouseover", () => {
         if (!isClicked.current) {
           markerInstance.setPopup(popup).togglePopup();
-
-          el.style.backgroundImage = `url(${
-            urlMarkerBig[marker.properties.type]
-          })`;
-          el.style.width = `${width + 35}px`;
-          el.style.height = `${height + 53.5}px`;
-          el.style.backgroundSize = "100%";
-          el.style.cursor = "pointer";
         }
       });
 
-      // Quando o cursor sair de cima do marcador, fechar o popup e diminuir marker
+      // Quando o cursor sair de cima do marcador e ele não estiver selecionado, fechar o popup
       markerInstance.getElement().addEventListener("mouseout", () => {
         if (!isClicked.current) {
           markerInstance.togglePopup();
+        }
+      });
 
+      // Quando o popup abrir
+      popup.on("open", () => {
+        //console.log("Popup aberto!", popupCounter);
+        // Se tiver o marker for clicado, soma 1 no popupCounter
+        if (isClicked.current) {
+          popupCounter++;
+          //console.log("POPUP ++", popupCounter);
+        }
+        // Ação a ser executada quando sempre que o popup é aberto
+        el.style.backgroundImage = `url(${
+          urlMarkerBig[marker.properties.type]
+        })`;
+        el.style.width = `${width + 35}px`;
+        el.style.height = `${height + 53.5}px`;
+        el.style.backgroundSize = "100%";
+      });
+
+      popup.on("close", () => {
+        // Quando o popup fechar, se o marker não tiver selecionado, diminuir o marker
+        if (!isClicked.current) {
           el.style.backgroundImage = `url(${
             urlMarkerSmall[marker.properties.type]
           })`;
@@ -201,24 +208,20 @@ function MapboxMap() {
           el.style.height = `${height}px`;
           el.style.backgroundSize = "100%";
         }
-      });
 
-      // Quando marker estiver selecionado, ao clicar no mapa, deselecionar marker
-      map.on("click", () => {
-        //if (markerInstance.getPopup() !== null) {
-        //  console.log("tem popup", markerInstance.getPopup());
-        //}
-
-        //  deu tilt n sei de mais nada
-        if (!isClicked.current) {
-          console.log("mapa clicado");
+        // Quando o popup fechar, se o marker tiver selecionado(popupCounter vai ser 1), deselecionar o marker e zerar o popupCounter
+        if (isClicked.current && popupCounter >= 1) {
           selectedMarker.current = null;
+          isClicked.current = false;
+          popupCounter = 0;
           el.style.backgroundImage = `url(${
             urlMarkerSmall[marker.properties.type]
           })`;
           el.style.width = `${width}px`;
           el.style.height = `${height}px`;
           el.style.backgroundSize = "100%";
+
+          //console.log("popup fechado", popupCounter);
         }
       });
 
@@ -235,11 +238,6 @@ function MapboxMap() {
         if (currentZoom < 4.5) {
           map.setZoom(4.5);
         }
-      });
-
-      // Clean up marker instance
-      markerInstance.getElement().addEventListener("DOMNodeRemoved", () => {
-        markerInstance.remove();
       });
     });
 
