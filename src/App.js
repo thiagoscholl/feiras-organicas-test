@@ -6,12 +6,12 @@ import Home from "./pages/Home";
 function App() {
   return (
     <Router>
-      <div className="flex flex-col justify-between h-screen">
+      <div className='flex flex-col justify-between h-screen'>
         <Navbar />
 
         <main>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path='/' element={<Home />} />
           </Routes>
         </main>
 
@@ -22,3 +22,4 @@ function App() {
 }
 
 export default App;
+
