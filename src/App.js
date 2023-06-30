@@ -6,10 +6,10 @@ import Home from "./pages/Home";
 function App() {
   return (
     <Router>
-      <div className='flex flex-col justify-between h-screen'>
+      <div className='flex flex-col justify-between min-h-screen'>
         <Navbar />
 
-        <main>
+        <main className='flex-1 flex'>
           <Routes>
             <Route path='/' element={<Home />} />
           </Routes>
