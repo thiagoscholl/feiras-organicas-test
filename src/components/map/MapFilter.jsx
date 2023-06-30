@@ -1,4 +1,5 @@
 import Carousel from "../layout/Carousel";
+import Filter from "../layout/Filter";
 
 export default function MapFilter() {
   const slides = [
@@ -20,17 +21,21 @@ export default function MapFilter() {
   ];
 
   return (
-    <div className='max-w-lg'>
+    <div className='max-w-lg h-full'>
       <Carousel autoSlide={true} autoSlideInterval={10000}>
         {slides.map((slide, index) => (
           <img
             src={slide.image}
             alt={slide.title}
             key={index}
-            className='w-full'
+            className='w-fit'
+            onClick={() => {
+              window.open(slide.link, "_blank");
+            }}
           />
         ))}
       </Carousel>
+      <Filter />
     </div>
   );
 }

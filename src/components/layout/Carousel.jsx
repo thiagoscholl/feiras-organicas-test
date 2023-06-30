@@ -20,7 +20,7 @@ export default function Carousel({
   }, []);
 
   return (
-    <div className='h-60 overflow-hidden relative'>
+    <div className='h-1/4 overflow-hidden relative'>
       <div
         className='flex transition-transform ease-out duration-500 h-full'
         style={{ transform: `translateX(-${curr * 100}%)` }}
