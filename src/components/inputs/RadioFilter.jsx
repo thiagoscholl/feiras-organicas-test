@@ -1,4 +1,10 @@
-export default function RadioFilter() {
+import { useEffect } from "react";
+
+export default function RadioFilter(props) {
+  useEffect(() => {
+    console.log(props.image);
+  }, []);
+
   return (
     <label
       htmlFor='filter-1'
@@ -10,8 +16,10 @@ export default function RadioFilter() {
         id='filter-1'
         className='absolute opacity-0 cursor-pointer h-full w-full'
       />
-      <span className="absolute bg-[url('/src/assets/servicos.svg')] bg-contain bg-center rounded-[100%] w-full h-full bg-no-repeat bg-[#FBD980]"></span>
+      <span
+        className={`absolute bg-contain bg-center rounded-[100%] w-full h-full bg-no-repeat`}
+        style={{ backgroundImage: require(`${props.image}`) }}
+      ></span>
     </label>
   );
 }
-
