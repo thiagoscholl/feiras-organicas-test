@@ -15,7 +15,7 @@ function Navbar() {
           <div className='flex-none px-2 mx-2'>
             <Link to='/' className='text-lg align-middle'>
               <img
-                className='lg:w-48 ml-2 md:w-32 sm:w-24'
+                className='lg:w-48 ml-2 md:w-32 sm:w-28 w-28'
                 src={logo}
                 alt='Logo'
               />
