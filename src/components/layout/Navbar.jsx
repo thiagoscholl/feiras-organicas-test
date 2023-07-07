@@ -26,7 +26,7 @@ function Navbar() {
               <Link to='/' className='btn btn-ghost btn-sm rounden-btn'>
                 Mapa
               </Link>
-              <Link to='/' className='btn btn-ghost btn-sm rounden-btn'>
+              <Link to='/about' className='btn btn-ghost btn-sm rounden-btn'>
                 Sobre Nós
               </Link>
               <Link to='/' className='btn btn-ghost btn-sm rounden-btn'>
@@ -91,7 +91,7 @@ function Navbar() {
                 </Link>
               </li>
               <li className='mb-1'>
-                <Link to='/' className='btn btn-ghost btn-sm rounden-btn'>
+                <Link to='/about' className='btn btn-ghost btn-sm rounden-btn'>
                   Sobre Nós
                 </Link>
               </li>

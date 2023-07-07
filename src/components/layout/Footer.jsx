@@ -6,9 +6,9 @@ function Footer() {
   return (
     <footer className='footer p-3 bg-default text-white justify-center'>
       <div className='container mt-2 '>
-        <div className='flex footer-center sm:space-x-20 space-x-2 sm:pr-16 pr-28'>
+        <div className='flex footer-center sm:space-x-20 space-x-2 sm:pr-16 pr-10'>
           <Link
-            to='/'
+            to='/about'
             className='btn btn-ghost btn-sm text-[10px] sm:text-sm rounden-btn'
           >
             Faça uma Doação
@@ -17,7 +17,7 @@ function Footer() {
             <img className='md:w-14 w-10' src={logo} alt='Logo' />
           </div>
           <Link
-            to='/'
+            to='/about'
             className='btn btn-ghost btn-sm text-[10px] sm:text-sm rounden-btn'
           >
             Contato
