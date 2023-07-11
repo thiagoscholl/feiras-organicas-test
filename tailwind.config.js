@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       maxWidth: {
         "3/4": "75%",
+      },
       colors: {
         brown: "#796049",
       },
