@@ -3,5 +3,16 @@
 @tailwind utilities;
 
 .bg-default {
-    background-color: #796049;
+  background-color: #796049;
 }
+
+.marker-title {
+  color: black;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.text-color-custom {
+  color: #796049;
+}
+
