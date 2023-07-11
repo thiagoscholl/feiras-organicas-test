@@ -81,7 +81,7 @@ export default function Filter() {
           />
         </div>
       </div>
-      <div className='flex justify-center h-full pt-4'>
+      <div className='flex justify-center pt-4'>
         <button
           type='button'
           className='w-[198px] h-[30px] bg-transparent text-[#796049] border-[#796049] border border-solid rounded-3xl'
