@@ -52,7 +52,7 @@ export default function Filter() {
         ))}
       </div>
       <div className='flex justify-center items-center w-full flex-col gap-3 mt-9 bg-[#FF770014] pt-[32px] pb-[44px]'>
-        <div className='flex justify-center items-center w-full gap-4'>
+        <div className='flex justify-center items-center w-full'>
           <label htmlFor='myRange' className='text-[#796049]'>
             Proximidade
           </label>
@@ -65,7 +65,7 @@ export default function Filter() {
             id='myRange'
           />
         </div>
-        <div className='flex justify-center items-center w-full gap-4'>
+        <div className='flex justify-center items-center w-full gap-4 flex-wrap'>
           <button
             type='button'
             className='w-[198px] h-[30px] bg-transparent text-[#796049] border-[#796049] border border-solid rounded-3xl'
