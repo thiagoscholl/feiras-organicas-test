@@ -3,6 +3,7 @@ import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import Home from "./pages/Home";
 import About from "./pages/About";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
         <main className='flex-1 flex'>
           <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/about' element={<About />} />
+            <Route path='/sobre-nos' element={<About />} />
+            <Route path='/cadastro' element={<Register />} />
           </Routes>
         </main>
 
