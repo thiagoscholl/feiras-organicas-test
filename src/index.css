@@ -6,6 +6,10 @@
   background-color: #796049;
 }
 
+.bg-default-light {
+  background-color: #79604980;
+}
+
 .marker-title {
   color: black;
   font-size: 0.9rem;
@@ -14,5 +18,13 @@
 
 .text-color-custom {
   color: #796049;
+}
+
+.text-color-custom-light {
+  color: #a38e7d;
+}
+
+.text-color-custom-dark {
+  color: #3c1d02;
 }
 

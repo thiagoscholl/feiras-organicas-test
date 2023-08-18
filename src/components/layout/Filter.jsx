@@ -37,7 +37,7 @@ export default function Filter() {
   return (
     <div className='h-3/4 bg-[#fff]'>
       <div className='flex justify-center items-center w-full'>
-        <h1 className='text-lg font-bold bg-default text-white w-full pl-8 py-1'>
+        <h1 className='text-sm font-bold bg-default text-white w-full pl-8 py-1'>
           Categorias
         </h1>
       </div>

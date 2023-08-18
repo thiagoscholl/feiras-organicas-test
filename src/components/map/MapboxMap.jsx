@@ -80,7 +80,7 @@ const geojson = {
   ],
 };
 
-function MapboxMap() {
+function MapboxMap(props) {
   const isClicked = useRef(false);
   const selectedMarker = useRef(null);
 
@@ -150,6 +150,8 @@ function MapboxMap() {
           // Se clicar no marcador e ele não estiver selecionado, selecionar
           markerInstance.setPopup(popup).togglePopup();
           selectedMarker.current = marker;
+          props.handleSelectProduct(selectedMarker.current);
+          // console.log(selectedMarker.current);
           isClicked.current = true;
           //console.log("marker clicado");
         }
